@@ -10,10 +10,10 @@ export class UserFavoriteController {
   constructor(private readonly userFavoriteService: UserFavoriteService) {}
 
   @Put('team')
-  async register(
+  async saveFavorite(
     @Request() request: any,
     @Body() saveFavoriteData: SaveFavoriteDto,
-  ): Promise<boolean> {
+  ): Promise<string[]> {
     const { teamId } = saveFavoriteData;
 
     return await this.userFavoriteService.saveFavorite(request.user.id, teamId);

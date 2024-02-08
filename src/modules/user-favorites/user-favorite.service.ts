@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
 import { UserFavoriteRepository } from './user-favorite.repository';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class UserFavoriteService {
   constructor(
     private readonly userFavoriteRepository: UserFavoriteRepository,
+    private readonly userService: UserService,
   ) {}
 
-  async saveFavorite(userId: string, teamId: string): Promise<boolean> {
+  async saveFavorite(userId: string, teamId: string): Promise<string[]> {
     const favoriteRecord = await this.userFavoriteRepository.findOneBy({
       userId,
       teamId,
@@ -20,6 +22,9 @@ export class UserFavoriteService {
       await this.userFavoriteRepository.save({ userId, teamId });
     }
 
-    return true;
+    const user = await this.userService.getProfile(userId);
+    const { favorites } = user;
+
+    return favorites.map((teamId) => teamId);
   }
 }
